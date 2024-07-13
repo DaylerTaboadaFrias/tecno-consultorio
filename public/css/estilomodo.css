@@ -1,0 +1,22 @@
+.navbar-modo-dia {
+    background-color: white;
+    color: black;
+  }
+  
+  /* Estilo para el modo noche */
+  .navbar-modo-noche {
+    background-color: #0a192f; /* Fondo azul oscuro */
+    color: #64ffda; /* Texto verde agua o cualquier color que prefieras */
+  }
+  .div-modo-dia {
+  background-color: #ffffff; /* Fondo blanco */
+  color: #000000; /* Texto negro */
+  border: 1px solid #cccccc; /* Borde gris claro */
+}
+
+/* Estilo para el modo noche */
+.div-modo-noche {
+  background-color: #172a45; /* Fondo azul oscuro más claro */
+  color: #a4b0be; /* Texto gris claro */
+  border: 1px solid #2d3d55; /* Borde azul oscuro más claro */
+}
