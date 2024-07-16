@@ -106,7 +106,7 @@ class PagoController extends Controller
         $validTransacciones = Transaccion::whereNotNull('fecha_vencimiento')
                                          ->whereNotNull('hora_vencimiento')
                                          ->whereRaw("TO_TIMESTAMP(CONCAT(fecha_vencimiento, ' ', hora_vencimiento), 'YYYY-MM-DD HH24:MI:SS') > ?", [$now])
-                                         ->get();
+                                         ->where('estado','!=','Pagado')->get();
         //dd($validTransacciones);                              
         $vista = Vista::where('nombre_vista','pago.create')->first();
         // Incrementar el contador
@@ -132,7 +132,7 @@ class PagoController extends Controller
         $validTransacciones = Transaccion::whereNotNull('fecha_vencimiento')
                                          ->whereNotNull('hora_vencimiento')
                                          ->whereRaw("TO_TIMESTAMP(CONCAT(fecha_vencimiento, ' ', hora_vencimiento), 'YYYY-MM-DD HH24:MI:SS') > ?", [$now])
-                                         ->orderBy('id', 'desc')->first();
+                                         ->where('id_pago',$id)->orderBy('id', 'desc')->first();
         $vista = Vista::where('nombre_vista','pago.create')->first();
         // Incrementar el contador
         if ($vista) {
@@ -155,10 +155,10 @@ class PagoController extends Controller
             $lnTelefono            = $request->tnTelefono;
             $lcNombreUsuario       = $request->tcRazonSocial;
             $lnCiNit               = $request->tcCiNit;
-            $lcNroPago             = "UAGRM-SC-GRUPO14-10".$request->taPedidoDetalle[0]["Serial"];
+            $lcNroPago             = "UAGRM-SC-GRUPO14-".$request->taPedidoDetalle[0]["Serial"];
             $lnMontoClienteEmpresa = $request->tnMonto;
             $lcCorreo              = $request->tcCorreo;
-            $lcUrlCallBack         = "https://mail.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/callback";
+            $lcUrlCallBack         = "https://mail.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/api/callback";
             $lcUrlReturn           = "http://localhost:8000/";
             $laPedidoDetalle       = $request->taPedidoDetalle;
             $lcUrl                 = "";
@@ -215,7 +215,7 @@ class PagoController extends Controller
                 $transaccion->estado = "Pendiente";
                 $transaccion->fecha_vencimiento = $date;
                 $transaccion->hora_vencimiento = $time;
-                $transaccion->id_pedido = "UAGRM-SC-GRUPO14-10".$request->taPedidoDetalle[0]["Serial"];
+                $transaccion->id_pedido = "UAGRM-SC-GRUPO14-".$request->taPedidoDetalle[0]["Serial"];
                 $transaccion->id_transaccion = explode(";", $laResult->values)[0];
                 $transaccion->imagen = $fileName;
                 $transaccion->save();
@@ -227,9 +227,10 @@ class PagoController extends Controller
                 $transaccion->id_pago = $request->taPedidoDetalle[0]["Serial"];
                 $transaccion->tipo = "Tigo Money";
                 $transaccion->estado = "Pendiente";
-                $transaccion->id_pedido = "UAGRM-SC-GRUPO14-10".$request->taPedidoDetalle[0]["Serial"];
+                $transaccion->id_pedido = "UAGRM-SC-GRUPO14-".$request->taPedidoDetalle[0]["Serial"];
                 $transaccion->id_transaccion = explode(";", $laResult->values)[0];
                 $transaccion->save();
+                return redirect()->route('pago.clientepagarconfirmar',[$request->taPedidoDetalle[0]["Serial"]]);
                 // $csrfToken = csrf_token();
                 // echo '<h5 class="text-center mb-4">' . $laResult->message . '</h5>';
                 // echo '<p class="blue-text">Transacción Generada: </p><p id="tnTransaccion" class="blue-text">'. $laResult->values . '</p><br>';
@@ -275,27 +276,9 @@ class PagoController extends Controller
 
     public function ConsultarEstado(Request $request)
     {
-        $lnTransaccion = $request->tnTransaccion;
-        
-        $loClientEstado = new Client();
-        
-        $lcUrlEstadoTransaccion = "https://serviciostigomoney.pagofacil.com.bo/api/servicio/consultartransaccion";
-
-        $laHeaderEstadoTransaccion = [
-            'Accept' => 'application/json'
-        ];
-
-        $laBodyEstadoTransaccion = [
-            "TransaccionDePago" => $lnTransaccion
-        ];
-        $loEstadoTransaccion = $loClientEstado->post($lcUrlEstadoTransaccion, [
-            'headers' => $laHeaderEstadoTransaccion,
-            'json' => $laBodyEstadoTransaccion
-        ]);
-
-        $laResultEstadoTransaccion = json_decode($loEstadoTransaccion->getBody()->getContents());
-        
-        return response()->json(['message' => $laResultEstadoTransaccion->values->estadoPago]);
+        $id_pago = $request->tnTransaccion;
+        $pago = Pago::findOrFail($id_pago);
+        return response()->json(['message' => $pago->estado]);
     }
 
     public function urlCallback(Request $request)

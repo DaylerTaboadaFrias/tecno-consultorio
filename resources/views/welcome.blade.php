@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
  
      <!-- Site Metas -->
-    <title>Health Lab - Responsive HTML5 Template</title>  
+    <title>Consultorio Dental Senac - Responsive HTML5 Template</title>  
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
@@ -56,7 +56,7 @@
 				</div>
 				<div class="col-lg-6">
 					<div class="wel-nots">
-						<p>Welcome to Our Health Lab!</p>
+						<p>Welcome to Our Consultorio Dental Senac!</p>
 					</div>
 					<div class="right-top">
 						<ul>
@@ -110,7 +110,7 @@
 					<div class="pogoSlider-slide" data-transition="fade" data-duration="1500" style="background-image:url(images/slider-01.jpg);">
 						<div class="lbox-caption pogoSlider-slide-element">
 							<div class="lbox-details">
-								<h1>Welcome to Health Lab</h1>
+								<h1>Welcome to Consultorio Dental Senac</h1>
 								<p>Fusce convallis ante id purus sagittis malesuada. Sed erat ipsum </p>
 								<a href="#" class="btn">Contact Us</a>
 							</div>
@@ -119,7 +119,7 @@
 					<!-- <div class="pogoSlider-slide" data-transition="fade" data-duration="1500" style="background-image:url(images/slider-02.jpg);">
 						<div class="lbox-caption pogoSlider-slide-element">
 							<div class="lbox-details">
-								<h1>We are Expert in The Field of Health Lab</h1>
+								<h1>We are Expert in The Field of Consultorio Dental Senac</h1>
 								<p>Fusce convallis ante id purus sagittis malesuada. Sed erat ipsum</p>
 								<a href="#appointment" class="btn">Appointment</a>
 							</div>
@@ -128,7 +128,7 @@
 					<div class="pogoSlider-slide" data-transition="fade" data-duration="1500" style="background-image:url(images/slider-03.jpg);">
 						<div class="lbox-caption pogoSlider-slide-element">
 							<div class="lbox-details">
-								<h1>Welcome to Health Lab</h1>
+								<h1>Welcome to Consultorio Dental Senac</h1>
 								<p>Fusce convallis ante id purus sagittis malesuada. Sed erat ipsum </p>
 								<a href="#" class="btn">Contact Us</a>
 							</div>
@@ -157,7 +157,7 @@
 					<div class="col-lg-12 col-md-12 col-sm-12">
 						<div class="row align-items-center about-main-info">
 							<div class="col-lg-6 col-md-6 col-sm-12">
-								<h2> Welcome to Health Lab </h2>
+								<h2> Welcome to Consultorio Dental Senac </h2>
 								<p>Fusce convallis ante id purus sagittis malesuada. Sed erat ipsum, suscipit sit amet auctor quis, vehicula ut leo. Maecenas felis nulla, tincidunt ac blandit a, consectetur quis elit. Nulla ut magna eu purus cursus sagittis. Praesent fermentum tincidunt varius. Proin sit amet tempus magna. Fusce pellentesque vulputate urna. </p>
 								<p>Fusce convallis ante id purus sagittis malesuada. Sed erat ipsum, suscipit sit amet auctor quis, vehicula ut leo. Maecenas felis nulla, tincidunt ac blandit a, consectetur quis elit. Nulla ut magna eu purus cursus sagittis. Praesent fermentum tincidunt varius. Proin sit amet tempus magna. Fusce pellentesque vulputate urna. </p>
 								<a href="#" class="new-btn-d br-2">Read More</a>
