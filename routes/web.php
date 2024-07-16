@@ -94,7 +94,6 @@ Route::middleware(['auth'])->group(function () {
     
     Route::post('/consumirServicio', [PagoController::class, 'RecolectarDatos']);
     Route::post('/consultar', [PagoController::class, 'ConsultarEstado']);
-    Route::get('/callback', [PagoController::class, 'urlCallback']);
     
     Route::get('/clientepago/tratamiento/index', [PagoController::class, 'indexCliente'])->name('clientepago.tratamiento.index');
     Route::group(['prefix' => 'medicamento'], function () {

@@ -158,7 +158,7 @@ class PagoController extends Controller
             $lcNroPago             = "UAGRM-SC-GRUPO14-10".$request->taPedidoDetalle[0]["Serial"];
             $lnMontoClienteEmpresa = $request->tnMonto;
             $lcCorreo              = $request->tcCorreo;
-            $lcUrlCallBack         = "http://localhost:8000/";
+            $lcUrlCallBack         = "https://mail.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/callback";
             $lcUrlReturn           = "http://localhost:8000/";
             $laPedidoDetalle       = $request->taPedidoDetalle;
             $lcUrl                 = "";
@@ -278,7 +278,7 @@ class PagoController extends Controller
         $lnTransaccion = $request->tnTransaccion;
         
         $loClientEstado = new Client();
-
+        
         $lcUrlEstadoTransaccion = "https://serviciostigomoney.pagofacil.com.bo/api/servicio/consultartransaccion";
 
         $laHeaderEstadoTransaccion = [
@@ -307,7 +307,11 @@ class PagoController extends Controller
         $MetodoPago = $request->input("MetodoPago");
         $Estado = $request->input("Estado");
         $Ingreso = true;
-        $transaccion = Transaccion::where('id_pedido',$Venta)->first();
+        $transaccion = Transaccion::where('id_pedido',$Venta)->orderBy('created_at', 'desc')->first();
+        $transaccion->estado = 'Pagado';
+        $transaccion->fecha = $NuevaFecha;
+        $transaccion->hora = $Hora;
+        $transaccion->save();
         $pago = Pago::findOrFail($transaccion->id_pago);
         $pago->estado = 'Pagado';
         $pago->save();
