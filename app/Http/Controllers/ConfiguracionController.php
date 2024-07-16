@@ -38,6 +38,7 @@ class ConfiguracionController extends Controller
         $configuracion = Configuracion::where('id_usuario',auth()->user()->id)->first();
         $configuracion->modo = $request->input('modos');
         $configuracion->tema = $request->input('temas');
+        $configuracion->estado_modo = $request->input('estado_modos');
         $configuracion->save();
         return redirect()->route('configuracion.index');
 

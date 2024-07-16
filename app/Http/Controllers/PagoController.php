@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Pago;
-use App\Models\Vista;
 
+use App\Models\Vista;
 use GuzzleHttp\Client;
 use App\Models\Consulta;
 use App\Models\Antecedente;
+use App\Models\Transaccion;
 use App\Models\Tratamiento;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -19,7 +23,7 @@ class PagoController extends Controller
 {
     public function indexTratamiento()
     {
-        $tratamientos = Tratamiento::with('consulta.cliente')->where('estado','!=','Eliminado')->paginate(10);
+        $tratamientos = Tratamiento::with('consulta.cliente')->where('estado','!=','Eliminado')->orderBy('id', 'desc')->paginate(10);
         $vista = Vista::where('nombre_vista','pago.index-tratamiento')->first();
         // Incrementar el contador
         if ($vista) {
@@ -40,7 +44,7 @@ class PagoController extends Controller
         $clienteId= auth()->user()->id;
         $tratamientos = Tratamiento::whereHas('consulta.cliente', function($query) use ($clienteId) {
             $query->where('id', $clienteId);
-        })->where('estado', '!=', 'Eliminado')->with('consulta.cliente')->paginate(10);
+        })->where('estado', '!=', 'Eliminado')->with('consulta.cliente')->orderBy('id', 'desc')->paginate(10);
         
         $vista = Vista::where('nombre_vista','pago.clienteindex-tratamiento')->first();
         // Incrementar el contador
@@ -98,6 +102,12 @@ class PagoController extends Controller
     {
         $usuario = auth()->user();
         $pago = Pago::findOrFail($id);
+        $now = Carbon::now();
+        $validTransacciones = Transaccion::whereNotNull('fecha_vencimiento')
+                                         ->whereNotNull('hora_vencimiento')
+                                         ->whereRaw("TO_TIMESTAMP(CONCAT(fecha_vencimiento, ' ', hora_vencimiento), 'YYYY-MM-DD HH24:MI:SS') > ?", [$now])
+                                         ->get();
+        //dd($validTransacciones);                              
         $vista = Vista::where('nombre_vista','pago.create')->first();
         // Incrementar el contador
         if ($vista) {
@@ -110,9 +120,33 @@ class PagoController extends Controller
             $vista->contador = 1;
             $vista->save(); 
         }
-        return view('pago.pagar', ['pago' => $pago,'vista' => $vista,'usuario' => $usuario]);
+        return view('pago.pagar', ['pago' => $pago,'validTransacciones'=>$validTransacciones,'vista' => $vista,'usuario' => $usuario]);
     }
-
+    public function confirmar($id)
+    {
+        $now = Carbon::now();
+        $usuario = auth()->user();
+        $pago = Pago::findOrFail($id);
+        $transaccionQr = Transaccion::where('id_pago',$id)->where('tipo','Qr')->orderBy('created_at', 'desc')->first();
+        $transaccionTigo = Transaccion::where('id_pago',$id)->where('tipo','Tigo Money')->orderBy('created_at', 'desc')->first();
+        $validTransacciones = Transaccion::whereNotNull('fecha_vencimiento')
+                                         ->whereNotNull('hora_vencimiento')
+                                         ->whereRaw("TO_TIMESTAMP(CONCAT(fecha_vencimiento, ' ', hora_vencimiento), 'YYYY-MM-DD HH24:MI:SS') > ?", [$now])
+                                         ->orderBy('id', 'desc')->first();
+        $vista = Vista::where('nombre_vista','pago.create')->first();
+        // Incrementar el contador
+        if ($vista) {
+            $contador = $vista->contador + 1;
+            $vista->contador = $contador;
+            $vista->save();
+        }else{
+            $vista = new Vista;
+            $vista->nombre_vista = 'pago.create';
+            $vista->contador = 1;
+            $vista->save(); 
+        }
+        return view('pago.confirmacion', ['validTransacciones' => $validTransacciones,'pago' => $pago,'transaccionQr' => $transaccionQr,'transaccionTigo' => $transaccionTigo,'vista' => $vista,'usuario' => $usuario]);
+    }
     public function RecolectarDatos(Request $request)
     {
         try {
@@ -121,7 +155,7 @@ class PagoController extends Controller
             $lnTelefono            = $request->tnTelefono;
             $lcNombreUsuario       = $request->tcRazonSocial;
             $lnCiNit               = $request->tcCiNit;
-            $lcNroPago             = "UAGRM-SC-GRUPO14-900"     ;
+            $lcNroPago             = "UAGRM-SC-GRUPO14-10".$request->taPedidoDetalle[0]["Serial"];
             $lnMontoClienteEmpresa = $request->tnMonto;
             $lcCorreo              = $request->tcCorreo;
             $lcUrlCallBack         = "http://localhost:8000/";
@@ -161,50 +195,74 @@ class PagoController extends Controller
 
             $laResult = json_decode($loResponse->getBody()->getContents());
             if ($request->tnTipoServicio == 1) {
-
                 $laValues = explode(";", $laResult->values)[1];
-           
-
-                $laQrImage = "data:image/png;base64," . json_decode($laValues)->qrImage;
-                echo '<img src="' . $laQrImage . '" alt="Imagen base64">';
+                $imageData = base64_decode(json_decode($laValues)->qrImage);
+                $dateTimeArray = explode(' ', json_decode($laValues)->expirationDate);
+                $date = $dateTimeArray[0];
+                $time = $dateTimeArray[1];
+                if ($imageData === false) {
+                    return response()->json(['error' => 'Base64 inválido'], 422);
+                }
+                $fileName = Str::random(10) . '.png';
+                $filePath = public_path('images/' . $fileName);
+                if (!File::exists(public_path('images'))) {
+                    File::makeDirectory(public_path('images'), 0755, true);
+                }
+                File::put($filePath, $imageData);
+                $transaccion = new Transaccion;
+                $transaccion->id_pago = $request->taPedidoDetalle[0]["Serial"];
+                $transaccion->tipo = "Qr";
+                $transaccion->estado = "Pendiente";
+                $transaccion->fecha_vencimiento = $date;
+                $transaccion->hora_vencimiento = $time;
+                $transaccion->id_pedido = "UAGRM-SC-GRUPO14-10".$request->taPedidoDetalle[0]["Serial"];
+                $transaccion->id_transaccion = explode(";", $laResult->values)[0];
+                $transaccion->imagen = $fileName;
+                $transaccion->save();
+                //$laQrImage = "data:image/png;base64," . json_decode($laValues)->qrImage;
+                return redirect()->route('pago.clientepagarconfirmar',[$request->taPedidoDetalle[0]["Serial"]]);
+                //echo '<img src="' . $laQrImage . '" alt="Imagen base64">';
             } elseif ($request->tnTipoServicio == 2) {
+                $transaccion = new Transaccion;
+                $transaccion->id_pago = $request->taPedidoDetalle[0]["Serial"];
+                $transaccion->tipo = "Tigo Money";
+                $transaccion->estado = "Pendiente";
+                $transaccion->id_pedido = "UAGRM-SC-GRUPO14-10".$request->taPedidoDetalle[0]["Serial"];
+                $transaccion->id_transaccion = explode(";", $laResult->values)[0];
+                $transaccion->save();
+                // $csrfToken = csrf_token();
+                // echo '<h5 class="text-center mb-4">' . $laResult->message . '</h5>';
+                // echo '<p class="blue-text">Transacción Generada: </p><p id="tnTransaccion" class="blue-text">'. $laResult->values . '</p><br>';
+                // echo '<iframe name="QrImage" style="width: 100%; height: 300px;"></iframe>';
+                // echo '<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>';
 
-             
-                
-                $csrfToken = csrf_token();
-
-                echo '<h5 class="text-center mb-4">' . $laResult->message . '</h5>';
-                echo '<p class="blue-text">Transacción Generada: </p><p id="tnTransaccion" class="blue-text">'. $laResult->values . '</p><br>';
-                echo '<iframe name="QrImage" style="width: 100%; height: 300px;"></iframe>';
-                echo '<script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>';
-
-                echo '<script>
-                        $(document).ready(function() {
-                            function hacerSolicitudAjax(numero) {
-                                // Agrega el token CSRF al objeto de datos
-                                var data = { _token: "' . $csrfToken . '", tnTransaccion: numero };
+                // echo '<script>
+                //         $(document).ready(function() {
+                //             function hacerSolicitudAjax(numero) {
+                //                 // Agrega el token CSRF al objeto de datos
+                //                 var data = { _token: "' . $csrfToken . '", tnTransaccion: numero };
                                 
-                                $.ajax({
-                                    url: \'/consultar\',
-                                    type: \'POST\',
-                                    data: data,
-                                    success: function(response) {
-                                        var iframe = document.getElementsByName(\'QrImage\')[0];
-                                        iframe.contentDocument.open();
-                                        iframe.contentDocument.write(response.message);
-                                        iframe.contentDocument.close();
-                                    },
-                                    error: function(error) {
-                                        console.error(error);
-                                    }
-                                });
-                            }
+                //                 $.ajax({
+                //                     url: \'/consultar\',
+                //                     type: \'POST\',
+                //                     data: data,
+                //                     success: function(response) {
+                //                         var iframe = document.getElementsByName(\'QrImage\')[0];
+                //                         iframe.contentDocument.open();
+                //                         iframe.contentDocument.write(response.message);
+                //                         iframe.contentDocument.close();
+                //                     },
+                //                     error: function(error) {
+                //                         console.error(error);
+                //                     }
+                //                 });
+                //             }
 
-                            setInterval(function() {
-                                hacerSolicitudAjax(' . $laResult->values . ');
-                            }, 7000);
-                        });
-                    </script>';
+                //             setInterval(function() {
+                //                 hacerSolicitudAjax(' . $laResult->values . ');
+                //             }, 7000);
+                //         });
+                //     </script>';
 
 
             
@@ -215,10 +273,60 @@ class PagoController extends Controller
         }
     }
 
+    public function ConsultarEstado(Request $request)
+    {
+        $lnTransaccion = $request->tnTransaccion;
+        
+        $loClientEstado = new Client();
+
+        $lcUrlEstadoTransaccion = "https://serviciostigomoney.pagofacil.com.bo/api/servicio/consultartransaccion";
+
+        $laHeaderEstadoTransaccion = [
+            'Accept' => 'application/json'
+        ];
+
+        $laBodyEstadoTransaccion = [
+            "TransaccionDePago" => $lnTransaccion
+        ];
+        $loEstadoTransaccion = $loClientEstado->post($lcUrlEstadoTransaccion, [
+            'headers' => $laHeaderEstadoTransaccion,
+            'json' => $laBodyEstadoTransaccion
+        ]);
+
+        $laResultEstadoTransaccion = json_decode($loEstadoTransaccion->getBody()->getContents());
+        
+        return response()->json(['message' => $laResultEstadoTransaccion->values->estadoPago]);
+    }
+
+    public function urlCallback(Request $request)
+    {
+        $Venta = $request->input("PedidoID");
+        $Fecha = $request->input("Fecha");
+        $NuevaFecha = date("Y-m-d", strtotime($Fecha));
+        $Hora = $request->input("Hora");
+        $MetodoPago = $request->input("MetodoPago");
+        $Estado = $request->input("Estado");
+        $Ingreso = true;
+        $transaccion = Transaccion::where('id_pedido',$Venta)->first();
+        $pago = Pago::findOrFail($transaccion->id_pago);
+        $pago->estado = 'Pagado';
+        $pago->save();
+        try {
+          //  propceso de verificacion y procesando el pago ya en el lado del comercio
+            $arreglo = ['error' => 0, 'status' => 1, 'message' => "Pago realizado correctamente.", 'values' => true];
+        } catch (\Throwable $th) {
+            $arreglo = ['error' => 1, 'status' => 1, 'messageSistema' => "[TRY/CATCH] " . $th->getMessage(), 'message' => "No se pudo realizar el pago, por favor intente de nuevo.", 'values' => false];
+        }
+
+        return response()->json($arreglo);
+    }
+
     public function store(Request $request)
     {
+
+        $montoacobrar= Tratamiento::findOrFail($request->id_tratamiento)->montoacobrar;
         $validator = Validator::make($request->all(), [
-            'monto' => 'required',
+            'monto' => 'required|numeric|max:'.$montoacobrar,
             'metodo' => 'required',
             'fecha' => 'required',
             'hora' => 'required',

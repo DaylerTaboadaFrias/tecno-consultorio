@@ -33,6 +33,11 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex  px-2">
+                    <x-nav-link :href="route('usuario.index')" :active="request()->routeIs('usuario.index')">
+                        {{ __('G.Usuarios') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex  px-2">
                     <x-nav-link :href="route('tratamiento.index')" :active="request()->routeIs('tratamiento.index')">
                         {{ __('G.Tratamientos') }}
                     </x-nav-link>
@@ -102,15 +107,15 @@
                     </x-nav-link>
                 </div>
                 @endif
-                
-                {{-- @php
-            use App\Helpers\MenuHelper;
-
-            // Obtener los módulos permitidos para el usuario actual
-            $modulos = MenuHelper::getUserModules();
-            @endphp
-
-                
+                    @php
+                        use App\Helpers\MenuHelper;
+                        // Obtener los módulos permitidos para el usuario actual
+                        $modulos=[];
+                        if(auth()->check() && auth()->user()->tipo == 'Ninguno'){
+                            $modulos = MenuHelper::getUserModules();
+                        }
+                        
+                    @endphp
                     @foreach($modulos as $modulo)
                     
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex px-2">
@@ -118,11 +123,7 @@
                                 {{ __($modulo->mod_name) }}
                             </x-nav-link>
                         </div>
-                    @endforeach --}}
-                
-            
-
-                
+                    @endforeach
             </div>
 
             {{-- <div class="hidden sm:flex sm:items-center sm:ml-6">

@@ -18,7 +18,7 @@ class RecetaController extends Controller
 {
     public function index()
     {
-        $recetas = Receta::with('tratamiento.consulta.cliente')->where('estado','!=','Eliminado')->paginate(10);
+        $recetas = Receta::with('tratamiento.consulta.cliente')->where('estado','!=','Eliminado')->orderBy('id', 'desc')->paginate(10);
         $vista = Vista::where('nombre_vista','receta.index')->first();
         // Incrementar el contador
         if ($vista) {

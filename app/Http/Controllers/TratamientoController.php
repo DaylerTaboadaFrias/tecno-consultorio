@@ -18,7 +18,7 @@ class TratamientoController extends Controller
 {
     public function index()
     {
-        $tratamientos = Tratamiento::with('consulta.cliente')->where('estado','!=','Eliminado')->paginate(10);
+        $tratamientos = Tratamiento::with('consulta.cliente')->where('estado','!=','Eliminado')->orderBy('id', 'desc')->paginate(10);
         $vista = Vista::where('nombre_vista','tratamiento.index')->first();
         // Incrementar el contador
         if ($vista) {

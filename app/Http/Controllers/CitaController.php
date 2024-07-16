@@ -18,7 +18,7 @@ class CitaController extends Controller
 {
     public function index()
     {
-        $citas = Cita::with('cliente','tratamiento')->where('estado','!=','Eliminado')->paginate(10);
+        $citas = Cita::with('cliente','tratamiento')->where('estado','!=','Eliminado')->orderBy('id', 'desc')->paginate(10);
         $vista = Vista::where('nombre_vista','cita.index')->first();
         // Incrementar el contador
         if ($vista) {

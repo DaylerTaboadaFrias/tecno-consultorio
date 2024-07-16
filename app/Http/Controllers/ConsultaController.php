@@ -17,7 +17,7 @@ class ConsultaController extends Controller
 {
     public function index()
     {
-        $consultas = Consulta::with('cliente')->where('estado','!=','Eliminado')->paginate(10);
+        $consultas = Consulta::with('cliente')->where('estado','!=','Eliminado')->orderBy('id', 'desc')->paginate(10);
         $vista = Vista::where('nombre_vista','consulta.index')->first();
         // Incrementar el contador
         if ($vista) {

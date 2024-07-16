@@ -21,17 +21,30 @@
                   <form method="POST" action="{{route('configuracion.store')}}" enctype="multipart/form-data"> 
                     @csrf
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                        <h2 class="text-gray-900 text-lg mb-1 font-medium title-font">{{ __("Modos") }}</h2>
+                        <h2 class="text-gray-900 text-lg mb-1 font-medium title-font">{{ __("Estado Modos") }}</h2>
                       
                         <div class="flex items-center mb-4">
-                          <input @if($configuracion->modo === 'Dia') checked @endif id="country-option-1" type="radio" name="modos" value="Dia" class="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600" >
+                          <input @if($configuracion->estado_modo === 'Activado') checked @endif id="country-option-1" type="radio" name="estado_modos" value="Activado" class="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600" >
                           <label for="country-option-1" class="block ms-2  text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Activado
+                          </label>
+                        </div>
+                        <div class="flex items-center mb-4">
+                          <input @if($configuracion->estado_modo === 'Desactivado') checked @endif id="country-option-2" type="radio" name="estado_modos" value="Desactivado" class="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600">
+                          <label for="country-option-2" class="block ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                            Desactivado
+                          </label>
+                        </div>
+                        <h2 class="text-gray-900 text-lg mb-1 font-medium title-font">{{ __("Modos") }}</h2>
+                        <div class="flex items-center mb-4">
+                          <input @if($configuracion->modo === 'Dia') checked @endif id="modo-option-1" type="radio" name="modos" value="Dia" class="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600" >
+                          <label for="modo-option-1" class="block ms-2  text-sm font-medium text-gray-900 dark:text-gray-300">
                             Modo dia
                           </label>
                         </div>
                         <div class="flex items-center mb-4">
-                          <input @if($configuracion->modo === 'Noche') checked @endif id="country-option-2" type="radio" name="modos" value="Noche" class="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600">
-                          <label for="country-option-2" class="block ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
+                          <input @if($configuracion->modo === 'Noche') checked @endif id="modo-option-2" type="radio" name="modos" value="Noche" class="w-4 h-4 border-gray-300 focus:ring-2 focus:ring-blue-300 dark:focus:ring-blue-600 dark:focus:bg-blue-600 dark:bg-gray-700 dark:border-gray-600">
+                          <label for="modo-option-2" class="block ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">
                             Modo noche
                           </label>
                         </div>

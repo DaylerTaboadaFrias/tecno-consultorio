@@ -11,10 +11,15 @@ class Permiso extends Model
 {
     use HasFactory;
     protected $table = 'permiso';
-
+    protected $primaryKey = 'id';
+    protected $keyType = 'string';
     // Relación con usuario
     public function usuario()
     {
         return $this->belongsTo(User::class, 'id_usuario');
+    }
+    public function grupo()
+    {
+        return $this->belongsTo(Grupo::class, 'grup_cod', 'grup_cod');
     }
 }

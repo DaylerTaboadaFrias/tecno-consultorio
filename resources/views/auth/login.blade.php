@@ -1,7 +1,6 @@
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
-            <img class="p-6 object-fill h-50 w-80 dark:shadow-gray-800" src="{{ asset('logoEvenPher2.png') }}" alt="image description">
         </x-slot>
 
         <!-- Session Status -->
@@ -12,6 +11,9 @@
 
         <form method="POST" action="{{ route('login') }}">
             @csrf
+            <div class="flex justify-center items-center h-screen">
+                <img class="object-fill h-50 w-80 dark:shadow-gray-800" src="{{ asset('images/logos/logotipo.png') }}" alt="image description">
+            </div>
 
             <!-- Email Address -->
             <div>

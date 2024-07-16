@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\Role;
+use App\Models\Grupo;
 use App\Models\Permiso;
 use App\Models\Configuracion;
 use Laravel\Sanctum\HasApiTokens;
@@ -18,7 +19,7 @@ class User extends Authenticatable
     protected $fillable = [
         'nombre', 'email', 'password'
    ];
-   
+   protected $primaryKey = 'id';
    public $timestamps = false;
    public function configuracion()
     {
@@ -26,6 +27,11 @@ class User extends Authenticatable
     }
     public function permisos()
     {
-        return $this->hasMany(Permiso::class, 'id_usuario');
+        return $this->hasMany(Permiso::class, 'id_usuario', 'id');
+    }
+    public function grupos()
+    {
+        return $this->belongsToMany(Grupo::class, 'permiso', 'id_usuario', 'grup_cod')
+                    ->withPivot('perm_pass', 'perm_fini', 'permffin', 'permest');
     }
 }

@@ -10,7 +10,7 @@ class Modulo extends Model
 {
     use HasFactory;
     protected $table = 'modulo';
-
+    protected $keyType = 'string';
     // Relación con grupos
     public function grupos()
     {
