@@ -15,4 +15,4 @@ use App\Http\Controllers\PagoController;
 |
 */
 
-Route::post('/callback', [PagoController::class, 'urlCallback']);
+Route::put('/callback', [PagoController::class, 'urlCallback']);
