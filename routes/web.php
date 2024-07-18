@@ -85,7 +85,6 @@ Route::middleware(['auth','checkModuleAccess:Administrativo'])->group(function (
     });
     
     
-    Route::post('/consumirServicio', [PagoController::class, 'RecolectarDatos']);
     Route::post('/consultar', [PagoController::class, 'ConsultarEstado']);
     
     Route::get('/clientepago/tratamiento/index', [PagoController::class, 'indexCliente'])->name('clientepago.tratamiento.index');
@@ -140,14 +139,14 @@ Route::group(['prefix' => 'pago'], function () {
     Route::put('{id}/destroy', [PagoController::class, 'destroy'])->name('pago.destroy');
     Route::put('{id}/pagar', [PagoController::class, 'pagarAdmin'])->name('pago.pagar');
 });
+Route::post('/consumirServicio', [PagoController::class, 'RecolectarDatos']);
+Route::post('/consultar', [PagoController::class, 'ConsultarEstado']);
+
+Route::get('/clientepago/tratamiento/index', [PagoController::class, 'indexCliente'])->name('clientepago.tratamiento.index');
+
 Route::middleware(['auth','checkModuleAccess:Cliente'])->group(function () {
     
     
-    
-    Route::post('/consumirServicio', [PagoController::class, 'RecolectarDatos']);
-    Route::post('/consultar', [PagoController::class, 'ConsultarEstado']);
-    
-    Route::get('/clientepago/tratamiento/index', [PagoController::class, 'indexCliente'])->name('clientepago.tratamiento.index');
     
     
 
