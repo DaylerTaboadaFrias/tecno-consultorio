@@ -261,7 +261,7 @@
                                                                 {{$servicio->id }}
                                                             </td>
                                                             <td class="p-4 w-32">
-                                                                <img class="w-50 h-50 rounded-full" src="/images/{{ $servicio->imagen }}" alt="image description">
+                                                                <img class="w-50 h-50 rounded-full" src="images/{{ $servicio->imagen }}" alt="image description">
                                                             </td>
                                                             <td class="py-4 px-6">
                                                                 {{$servicio->nombre }}
