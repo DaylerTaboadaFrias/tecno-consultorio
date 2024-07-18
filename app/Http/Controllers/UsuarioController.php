@@ -167,7 +167,6 @@ class UsuarioController extends Controller
         $usuario->cedula = $request->input('cedula');
         $usuario->email = $request->input('email');
         $usuario->password = Hash::make($request->input('cedula'));
-        $usuario->nit = $request->input('nit');
         $usuario->sexo = $request->input('sexo');
         $usuario->telefono = $request->input('telefono');
         $usuario->tipo = $request->input('tipo');
