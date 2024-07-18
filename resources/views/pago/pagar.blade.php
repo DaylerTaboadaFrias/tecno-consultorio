@@ -43,7 +43,7 @@
                             </ul>
                         </div>
 
-                        <form method="POST" action="/consumirServicio" enctype="multipart/form-data">
+                        <form method="POST" action="consumirServicio" enctype="multipart/form-data">
                             @csrf
 
                             <div class="bg-white overflow-  shadow-sm sm:rounded-lg p-6">
