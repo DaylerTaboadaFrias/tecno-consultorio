@@ -61,8 +61,8 @@ class CitaController extends Controller
             'hora' => 'required',
             'horafin' => 'required',
             'tipo' => 'required|string|in:Tratamiento,Consulta',
-            'id_cliente' => 'required_if:tipo,Consulta|nullable|exists:consultas,id',
-            'id_tratamiento' => 'required_if:tipo,Tratamiento|nullable|exists:tratamientos,id',
+            'id_cliente' => 'required_if:tipo,Consulta|nullable',
+            'id_tratamiento' => 'required_if:tipo,Tratamiento|nullable',
             'hora' => 'required|date_format:H:i',
             'horafin' => 'required|date_format:H:i|after:hora',
         ]);
