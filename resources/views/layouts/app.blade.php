@@ -116,7 +116,7 @@ a.fc-col-header-cell-cushion {
         @if(auth()->user()->configuracion->tema == 'Adultos') class="adultos-font antialiased" @endif>
         
         <div id="overlay" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 hidden z-50">
-            <img src="/images/logos/logo.png" alt="Loading..." class="w-16 h-16">
+            <img src="images/logos/logo.png" alt="Loading..." class="w-16 h-16">
         </div>
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')

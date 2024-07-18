@@ -195,5 +195,5 @@ class UsuarioController extends Controller
         Session::flash('status', 'Registro eliminado exitosamente!');
         return redirect()->route('usuario.index');
     }
-
+    
 }

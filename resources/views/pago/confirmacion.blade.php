@@ -57,7 +57,7 @@
                                     <h2 class="text-gray-900 dark:text-white text-3xl font-extrabold mb-2">Confirmacion de pago</h2>
                                     
                                     @if ($transaccionQr!=null)
-                                        <img class="w-100 h-100 rounded-full" src="/images/{{ $transaccionQr->imagen }}" alt="image description">
+                                        <img class="w-100 h-100 rounded-full" src="images/{{ $transaccionQr->imagen }}" alt="image description">
                                         @if($validTransacciones!= null && $validTransacciones->estado == 'Pagado')
                                             <div class="flex items-center p-4 mb-4 text-sm text-green-800 border border-green-300 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 dark:border-green-800" role="alert">
                                             <svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -100,7 +100,7 @@
         // Agrega el token CSRF al objeto de datos
         var data = { _token: "{{ csrf_token() }}", tnTransaccion: numero };
         
-        fetch('/consultar', {
+        fetch('consultar', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -115,8 +115,8 @@
                 // Detener el intervalo si el estado es 'Pagado'
                 clearInterval(intervalo);
                 console.log('Transacción pagada. Intervalo detenido.');
-                window.location.href = 'http://127.0.0.1:8000/pago/'+id_tratamiento;
-                //window.location.href = 'https://mail.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/pago/'+numero;
+                //window.location.href = 'http://127.0.0.1:8000/pago/'+id_tratamiento;
+                window.location.href = 'https://mail.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/pago/'+numero;
             }
         })
         .catch(error => {
@@ -124,7 +124,7 @@
         });
     }
     
-    var id_transaccion = '@json($pago->id)';
+    var id_transaccion = '@json($validTransacciones->id_transaccion)';
     var id_tratamiento = '@json($pago->id_tratamiento)';
     console.log(id_transaccion);
     // Guardar el ID del intervalo en la variable 'intervalo'

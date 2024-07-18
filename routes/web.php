@@ -42,7 +42,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 //, 'checkModuleAccess'
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','checkModuleAccess:Administrativo'])->group(function () {
     Route::group(['prefix' => 'estadisticareporte'], function () {
         Route::get('/', [EstadisticaReporteController::class, 'index'])->name('estadisticareporte.index');
         Route::get('/generar', [EstadisticaReporteController::class, 'generar'])->name('estadisticareporte.generar');
@@ -83,16 +83,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/{id}', [CitaController::class, 'update'])->name('cita.update');
         Route::put('{id}/destroy', [CitaController::class, 'destroy'])->name('cita.destroy');
     });
-    Route::group(['prefix' => 'pago'], function () {
-        Route::get('/{idTratamiento}', [PagoController::class, 'index'])->name('pago.index');
-        Route::get('/create/{idTratamiento}', [PagoController::class, 'create'])->name('pago.create');
-        Route::get('/tratamiento/index', [PagoController::class, 'indexTratamiento'])->name('pago.tratamiento.index');
-        Route::get('{id}/clientepagar', [PagoController::class, 'pagar'])->name('pago.clientepagar');
-        Route::get('{id}/clientepagarconfirmar', [PagoController::class, 'confirmar'])->name('pago.clientepagarconfirmar');
-        Route::post('/', [PagoController::class, 'store'])->name('pago.store');
-        Route::put('{id}/destroy', [PagoController::class, 'destroy'])->name('pago.destroy');
-        Route::put('{id}/pagar', [PagoController::class, 'pagarAdmin'])->name('pago.pagar');
-    });
+    
     
     Route::post('/consumirServicio', [PagoController::class, 'RecolectarDatos']);
     Route::post('/consultar', [PagoController::class, 'ConsultarEstado']);
@@ -139,6 +130,31 @@ Route::middleware(['auth'])->group(function () {
     });
     
 });
+Route::group(['prefix' => 'pago'], function () {
+    Route::get('/{idTratamiento}', [PagoController::class, 'index'])->name('pago.index');
+    Route::get('/create/{idTratamiento}', [PagoController::class, 'create'])->name('pago.create');
+    Route::get('/tratamiento/index', [PagoController::class, 'indexTratamiento'])->name('pago.tratamiento.index');
+    Route::get('{id}/clientepagar', [PagoController::class, 'pagar'])->name('pago.clientepagar');
+    Route::get('{id}/clientepagarconfirmar', [PagoController::class, 'confirmar'])->name('pago.clientepagarconfirmar');
+    Route::post('/', [PagoController::class, 'store'])->name('pago.store');
+    Route::put('{id}/destroy', [PagoController::class, 'destroy'])->name('pago.destroy');
+    Route::put('{id}/pagar', [PagoController::class, 'pagarAdmin'])->name('pago.pagar');
+});
+Route::middleware(['auth','checkModuleAccess:Cliente'])->group(function () {
+    
+    
+    
+    Route::post('/consumirServicio', [PagoController::class, 'RecolectarDatos']);
+    Route::post('/consultar', [PagoController::class, 'ConsultarEstado']);
+    
+    Route::get('/clientepago/tratamiento/index', [PagoController::class, 'indexCliente'])->name('clientepago.tratamiento.index');
+    
+    
 
+});
+Route::group(['prefix' => 'configuracion'], function () {
+    Route::get('/index', [ConfiguracionController::class, 'index'])->name('configuracion.index');
+    Route::post('/', [ConfiguracionController::class, 'store'])->name('configuracion.store');
+});
 
 require __DIR__ . '/auth.php';

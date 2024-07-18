@@ -26,7 +26,7 @@
                     <h2 class="text-gray-900 text-lg mb-1 font-medium title-font">{{ __("Escribe tu referencia") }}</h2>
                     <div class="relative mb-4">
                         <label for="campo" class="leading-7 text-sm text-gray-600">{{ __("Campo") }}</label>
-                        <input type="text" id="campo" required name="campo" value="{{ old("campo") }}" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                        <input type="text" id="campo" maxlength="5" required name="campo" value="{{ old("campo") }}" class="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                           @error('campo')
                               <p id="standard_error_help" class="mt-2 text-xs text-red-600 dark:text-red-400"><span class="font-medium">{{ $message }}</span></p>
                           @enderror
