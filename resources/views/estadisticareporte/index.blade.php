@@ -124,7 +124,7 @@
 
             var calendarEl = document.getElementById('calendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
-                events: '/citas/events',
+                events: 'citas/events',
                 eventRender: function(event, element) {
                     element.qtip({
                         content: event.description
