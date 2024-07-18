@@ -219,6 +219,7 @@ class PagoController extends Controller
                 $transaccion->id_transaccion = explode(";", $laResult->values)[0];
                 $transaccion->imagen = $fileName;
                 $transaccion->save();
+                
                 //$laQrImage = "data:image/png;base64," . json_decode($laValues)->qrImage;
                 return redirect()->route('pago.clientepagarconfirmar',[$request->taPedidoDetalle[0]["Serial"]]);
                 //echo '<img src="' . $laQrImage . '" alt="Imagen base64">';
