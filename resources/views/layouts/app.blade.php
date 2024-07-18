@@ -111,7 +111,7 @@ a.fc-col-header-cell-cushion {
 }
     </style>
     </head>
-    <body class="relative" @if(auth()->user()->configuracion->tema == 'Niños') class="niños-font antialiased" @endif 
+    <body  @if(auth()->user()->configuracion->tema == 'Niños') class="niños-font antialiased" @endif 
         @if(auth()->user()->configuracion->tema == 'Jovenes') class="adolecentes-font antialiased" @endif
         @if(auth()->user()->configuracion->tema == 'Adultos') class="adultos-font antialiased" @endif>
         
