@@ -93,6 +93,7 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", function() {
+        const consultarUrl = "{{ url('consultar') }}";
     // Variable para almacenar el ID del intervalo
     let intervalo;
 
@@ -100,7 +101,7 @@
         // Agrega el token CSRF al objeto de datos
         var data = { _token: "{{ csrf_token() }}", tnTransaccion: numero };
         
-        fetch('consultar', {
+        fetch(consultarUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
