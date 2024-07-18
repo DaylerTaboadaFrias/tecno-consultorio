@@ -42,12 +42,12 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 //, 'checkModuleAccess'
+    Route::get('/citas/events', [EstadisticaReporteController::class, 'events']);
 Route::middleware(['auth','checkModuleAccess:Administrativo'])->group(function () {
     Route::group(['prefix' => 'estadisticareporte'], function () {
         Route::get('/', [EstadisticaReporteController::class, 'index'])->name('estadisticareporte.index');
         Route::get('/generar', [EstadisticaReporteController::class, 'generar'])->name('estadisticareporte.generar');
     });
-    Route::get('/citas/events', [EstadisticaReporteController::class, 'events']);
     Route::group(['prefix' => 'servicio'], function () {
         Route::get('/', [ServicioController::class, 'index'])->name('servicio.index');
         Route::get('/create', [ServicioController::class, 'create'])->name('servicio.create');

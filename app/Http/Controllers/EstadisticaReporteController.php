@@ -50,7 +50,7 @@ class EstadisticaReporteController extends Controller
     }
     public function events()
     {
-        $citas = Cita::all();
+        $citas = Cita::where('estado','!=','Eliminado')->all();
         $events = [];
 
         foreach ($citas as $cita) {
