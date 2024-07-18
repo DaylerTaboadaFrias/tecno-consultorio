@@ -13,12 +13,111 @@
         <!-- Scripts -->
         <link rel="stylesheet" href="{{ asset('css/estilofondo.css') }}">
         <link rel="stylesheet" href="{{ asset('css/estilomodo.css') }}">
-
+        
+        
+    
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.15/index.global.min.js'></script>
+        <script src='https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.15/index.global.min.js'></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+
+.fc-event {
+    padding: 0.5rem;
+    background-color: #4caf50;
+    color: #ffffff;
+    border-radius: 0.25rem;
+}
+
+/* Estilo para el título de los eventos */
+.fc-event-title {
+    font-weight: bold;
+}
+.fc-day {
+    border: 1px solid #e2e8f0; /* Borde de las celdas */
+}
+
+/* Estilo para los números de día */
+.fc-day-number {
+    font-size: 14px; /* Tamaño de la fuente de los números */
+}
+
+/* Estilo para resaltar el día actual */
+.fc-today {
+    background-color: #f0f4f8; /* Fondo del día actual */
+    font-weight: bold; /* Texto del día actual en negrita */
+}
+.fc-col-header-cell {
+    background-color: #edf2f7; /* Fondo del encabezado de la columna */
+    border-bottom: 2px solid #e2e8f0; /* Borde inferior */
+    font-weight: bold; /* Texto en negrita */
+    text-align: center; /* Alineación del texto */
+    padding: 0.5rem; /* Espaciado interno */
+}
+.fc .fc-toolbar-title {
+    font-size: 1.25rem !important;
+    margin: 0;
+    font-weight: 500;
+    padding: 20px 0 0px 20px;
+}
+
+.fc .fc-button {
+    background-color: #006082 !important;
+    border-color: #006082 !important;
+}
+
+.fc-day-today {
+    background-color: #edf5f7 !important;
+}
+
+.fc-theme-standard td {
+    border: 1px solid #e5e7eb !important;
+} 
+
+.fc-day-other {
+    background: #FAFAFB;
+}
+
+.fc .fc-button .fc-icon {
+    font-size: 0.875rem !important;
+}
+
+a.fc-col-header-cell-cushion {
+    font-size: .85em !important;
+    line-height: 2.2rem !important;
+    font-weight: 600 !important;
+}
+
+.fc .fc-daygrid-day-top {
+    flex-direction: inherit !important;
+    padding: 5px !important;
+    font-size: .75em !important;
+    color: #6b7280 !important;
+}
+
+.fc .fc-button-primary:disabled {
+    background-color: #eeeeee !important;
+    color: black !important;
+    border-color: #eeeeee !important;
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+    text-transform: capitalize !important;
+}
+.fc-toolbar-title {
+    font-size: 1.25rem; /* Tamaño de la fuente */
+    font-weight: bold; /* Texto en negrita */
+    color: #4a5568; /* Color del texto */
+    margin: 0; /* Elimina el margen para controlar el espacio */
+}
+    </style>
     </head>
-    <body @if(auth()->user()->configuracion->tema == 'Niños') class="niños-font antialiased" @endif 
+    <body class="relative" @if(auth()->user()->configuracion->tema == 'Niños') class="niños-font antialiased" @endif 
         @if(auth()->user()->configuracion->tema == 'Jovenes') class="adolecentes-font antialiased" @endif
         @if(auth()->user()->configuracion->tema == 'Adultos') class="adultos-font antialiased" @endif>
+        
+        <div id="overlay" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-50 hidden z-50">
+            <img src="/images/logos/logo.png" alt="Loading..." class="w-16 h-16">
+        </div>
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
 
@@ -51,8 +150,17 @@
                 {{ $slot }}
             </main>
         </div>
-        <script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        
+        
     </body>
+    <script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('form').on('submit', function() {
+                    $('#overlay').removeClass('hidden');
+                });
+                 
+            });
+        </script>
 </html>

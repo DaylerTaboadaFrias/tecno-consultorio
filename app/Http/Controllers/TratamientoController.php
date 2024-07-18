@@ -94,43 +94,7 @@ class TratamientoController extends Controller
         Session::flash('status', 'Registro guardado exitosamente!');
         return redirect()->route('tratamiento.index');
     }
-    public function edit($id)
-    {
-        $tratamiento = Tratamiento::findOrFail($id);
-        $consultas = Consulta::with('cliente')->where('estado','!=','Eliminado')->get();
-        $vista = Vista::where('nombre_vista','tratamiento.edit')->first();
-        // Incrementar el contador
-        if ($vista) {
-            $contador = $vista->contador + 1;
-            $vista->contador = $contador;
-            $vista->save();
-        }else{
-            $vista = new Vista;
-            $vista->nombre_vista = 'tratamiento.edit';
-            $vista->contador = 1;
-            $vista->save(); 
-        }
-        return view('tratamiento.edit', ['tratamiento' => $tratamiento, 'consultas' => $consultas,'vista' => $vista]);
-    }
-    public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'motivo' => 'required|string|min:5|max:150',
-            'fecha' => 'required',
-            'id_cliente' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-        $tratamiento = Tratamiento::findOrFail($id);
-        $tratamiento->fecha = $request->input('fecha');
-        $tratamiento->descripcion = $request->input('descripcion');
-        $tratamiento->id_consulta = $request->input('id_consulta');
-        $tratamiento->save();
-        Session::flash('status', 'Registro editado exitosamente!');
-        return redirect()->route('tratamiento.index');
-    }
-
+    
     public function destroy($id)
     {
         $tratamiento = Tratamiento::findOrFail($id);
@@ -140,4 +104,5 @@ class TratamientoController extends Controller
         return redirect()->route('tratamiento.index');
     }
 
+    
 }

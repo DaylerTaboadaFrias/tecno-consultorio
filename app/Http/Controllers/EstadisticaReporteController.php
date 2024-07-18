@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Pago;
+use App\Models\Cita;
 
+use App\Models\Pago;
 use App\Models\Vista;
 use App\Models\Consulta;
 use App\Models\Antecedente;
@@ -43,9 +44,25 @@ class EstadisticaReporteController extends Controller
             $vista->contador = 1;
             $vista->save(); 
         }
-        $demandasServicios = $this->obtenerDatosDemandasServicios($year);
-        $demandasServicios = $this->obtenerDatosIngresosAnio($year);
+        $demandasServicios = $this->obtenerDatosDemandasServicios($year,'7');
+        $months = $this->obtenerDatosIngresosAnio($year);
         return view('estadisticareporte.index', compact('months', 'year','vista','demandasServicios'));
+    }
+    public function events()
+    {
+        $citas = Cita::all();
+        $events = [];
+
+        foreach ($citas as $cita) {
+            $events[] = [
+                'title' => $cita->tipo,
+                'start' => $cita->fecha . 'T' . $cita->hora,
+                'end' => $cita->fecha . 'T' . $cita->horafin,
+                'description' => $cita->notas,
+            ];
+        }
+
+        return response()->json($events);
     }
     public function generar(Request $request)
     {

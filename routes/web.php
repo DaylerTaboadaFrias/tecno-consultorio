@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', [EstadisticaReporteController::class, 'index'])->name('estadisticareporte.index');
         Route::get('/generar', [EstadisticaReporteController::class, 'generar'])->name('estadisticareporte.generar');
     });
+    Route::get('/citas/events', [EstadisticaReporteController::class, 'events']);
     Route::group(['prefix' => 'servicio'], function () {
         Route::get('/', [ServicioController::class, 'index'])->name('servicio.index');
         Route::get('/create', [ServicioController::class, 'create'])->name('servicio.create');
@@ -90,6 +91,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('{id}/clientepagarconfirmar', [PagoController::class, 'confirmar'])->name('pago.clientepagarconfirmar');
         Route::post('/', [PagoController::class, 'store'])->name('pago.store');
         Route::put('{id}/destroy', [PagoController::class, 'destroy'])->name('pago.destroy');
+        Route::put('{id}/pagar', [PagoController::class, 'pagarAdmin'])->name('pago.pagar');
     });
     
     Route::post('/consumirServicio', [PagoController::class, 'RecolectarDatos']);

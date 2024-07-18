@@ -92,44 +92,8 @@ class CitaController extends Controller
         Session::flash('status', 'Registro guardado exitosamente!');
         return redirect()->route('cita.index');
     }
-    public function edit($id)
-    {
-        $cita = Cita::findOrFail($id);
-        $clientes = User::where('tipo','Cliente')->where('estado','!=','Eliminado')->get();
-        $vista = Vista::where('nombre_vista','cita.edit')->first();
-        // Incrementar el contador
-        if ($vista) {
-            $contador = $vista->contador + 1;
-            $vista->contador = $contador;
-            $vista->save();
-        }else{
-            $vista = new Vista;
-            $vista->nombre_vista = 'cita.edit';
-            $vista->contador = 1;
-            $vista->save(); 
-        }
-        return view('cita.edit', ['cita' => $cita, 'clientes' => $clientes,'vista' => $vista]);
-    }
-    public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'motivo' => 'required|string|min:5|max:150',
-            'fecha' => 'required',
-            'id_cliente' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
-        $cita = Cita::findOrFail($id);
-        $cita->fecha = $request->input('fecha');
-        $cita->motivo = $request->input('motivo');
-        $cita->diagnostico = $request->input('diagnostico');
-        $cita->id_cliente = $request->input('id_cliente');
-        $cita->save();
-        Session::flash('status', 'Registro editado exitosamente!');
-        return redirect()->route('cita.index');
-    }
-
+    
+    
     public function destroy($id)
     {
         $cita = Cita::findOrFail($id);

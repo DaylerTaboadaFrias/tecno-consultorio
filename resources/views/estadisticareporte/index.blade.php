@@ -47,6 +47,15 @@
     </div>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="relative overflow-x-auto p-4">
+                    <div id="calendar" class="p-4 bg-white rounded-lg shadow-md"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="relative overflow-x-auto p-4">
                     
@@ -57,7 +66,7 @@
             </div>
         </div>
     </div>
-
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var ctx = document.getElementById('incomeChart').getContext('2d');
@@ -112,6 +121,20 @@
                     }
                 }
             });
+
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                events: '/citas/events',
+                eventRender: function(event, element) {
+                    element.qtip({
+                        content: event.description
+                    });
+                    // Personalizar estilo del evento
+                    $(element).addClass('bg-blue-500 text-dark'); // Ejemplo de clase de Tailwind
+                }
+            });
+            calendar.render();
         });
+        
     </script>
 </x-app-layout>

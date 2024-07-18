@@ -86,8 +86,8 @@
                 <div class="collapse navbar-collapse justify-content-end" id="navbar-wd">
                     <ul class="navbar-nav">
                         <li><a class="nav-link active" href="#home">Home</a></li>
-                        <li><a class="nav-link" href="#about">About Us</a></li>
-                        <li><a class="nav-link" href="#services">Services</a></li>
+                        <li><a class="nav-link" href="#about">Acerca de</a></li>
+                        <li><a class="nav-link" href="#services">Servicios</a></li>
                         @if (Route::has('login'))
                             @auth
                                 <li><a class="nav-link" href="{{ url('/dashboard') }}">Panel</a></li>

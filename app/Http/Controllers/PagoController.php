@@ -345,5 +345,13 @@ class PagoController extends Controller
         Session::flash('status', 'Registro eliminado exitosamente!');
         return redirect()->route('pago.index',[$id_tratamiento]);
     }
-
+    public function pagarAdmin($id)
+    {
+        $pago = Pago::findOrFail($id);
+        $pago->estado ='Pagado';
+        $id_tratamiento =  $pago->id_tratamiento;
+        $pago->update();
+        Session::flash('status', 'Registro eliminado exitosamente!');
+        return redirect()->route('pago.index',[$id_tratamiento]);
+    }
 }
