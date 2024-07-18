@@ -24,7 +24,7 @@ class BuscadorController extends Controller
     public function index(Request $request)
     {
         $consultas = Consulta::where('motivo','ilike','%'.$request->campo.'%')->get();
-        $url = "https://mail.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/";
+        $url = "https://www.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/";
         //$url = "http://127.0.0.1:8000/";
         $consultas = $consultas->map(function ($consulta) use ($request,$url) {
             $consulta->descripcion_referencia = 'Se encontró una referencia '.$consulta->motivo.' similar a '.$request->campo.'en la tabla de consultas';

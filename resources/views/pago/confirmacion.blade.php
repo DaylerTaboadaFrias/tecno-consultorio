@@ -117,7 +117,7 @@
                 clearInterval(intervalo);
                 console.log('Transacción pagada. Intervalo detenido.');
                 //window.location.href = 'http://127.0.0.1:8000/pago/'+id_tratamiento;
-                window.location.href = 'https://www.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/pago/'+numero;
+                window.location.href = 'https://www.tecnoweb.org.bo/inf513/grupo14sc/tecno-consultorio/public/pago/'+id_tratamiento;
             }
         })
         .catch(error => {
